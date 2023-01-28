@@ -41,4 +41,39 @@ public ResponseEntity<List<StudentDTO>> getAllStudent(){
     List<StudentDTO> students = studentService.getAllStudent();
     return ResponseEntity.ok(students);
 }
+    //b)ögrencilerin notlarini degistirebilsin   ----->AYŞE
+    @PutMapping("{studentNo}") // http://localhost:8088/students/105
+    public ResponseEntity<String> updateGrade(@PathVariable("studentNo") String studentNo, @Valid @RequestBody StudentDTO studentDTO) {
+        studentService.updateGrade(studentNo,studentDTO);
+
+        return ResponseEntity.ok("Grade is updated successfuly");}
+    @PutMapping("/update")
+    public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO studentDTO){
+        studentService.updateStudent(studentDTO);
+        return ResponseEntity.ok(studentDTO);
+    }
+   // c)ogrenci silebilsin, ---->     kamuran
+    @DeleteMapping( "/{studentNo}")
+    public  ResponseEntity<String> deletStudent(@PathVariable("studentno") String studentNo){
+    studentService.deleteStudent(studentNo);
+    return ResponseEntity.ok("deleting is succesfully");
+    }
+    //e)Istedigi ozellik ile siralama yapabilsin(Isme gore siralama) ---->yavuz selim
+
+    @GetMapping("/sort")
+    public  ResponseEntity<List<Student>> mylistbysort(){
+        List<Student> students=studentService.getAllBySort();
+        return ResponseEntity.ok(students);
+    }
+
+    // f)istedigi ozelliklerdeki ogrencileri filtreleyebilsin(Notu 70 den fazla olanlar) ---->????
+    @GetMapping("/not")
+    public ResponseEntity<List<Student>> getAllByNot(@RequestParam("grade") String grade){
+        List<Student> students=studentService.getAllByNot(grade);
+        return ResponseEntity.ok(students);
+    }
+
 }
+
+
+

@@ -44,4 +44,52 @@ public List<StudentDTO> getAllStudent(){
         for (Student s:list){listDTO.add(new StudentDTO(s));}
         return listDTO;
 }
+    public Student getStudentByStudentNo(String studentNo){
+        Student student= (Student) studentRepository.findByStudentNo(studentNo).
+                orElseThrow(()->new ResourceNotFoundException("Student not found by studentNo: "+studentNo));
+        return student;
+    }
+
+    public void updateGrade(String studentNo, StudentDTO studentDTO) {
+
+        Student student = getStudentByStudentNo(studentNo);
+        boolean exist=studentRepository.existsBystudentNo(studentDTO.getStudentNo());
+        if (exist&& !student.getStudentNo().equals(studentDTO.getStudentNo())){
+            throw new ConflictException("this student is already ");
+
+        }
+
+       student.setGrade(studentDTO.getGrade()); // sadece notunu degistirdik
+       studentRepository.save(student); //sadece not degistirdi digerleri ayni  s
+
+    }
+
+    public void updateStudent(StudentDTO studentDTO) {
+
+        boolean exist=studentRepository.existsBystudentNo(studentDTO.getStudentNo());
+        Student student=getStudentByStudentNo(studentDTO.getStudentNo());
+        if (exist&& !student.getStudentNo().equals(studentDTO.getStudentNo())){
+            throw new ConflictException("this student is already in");
+
+        }student.setName(studentDTO.getFirstName());
+        student.setLastName(studentDTO.getLastName());
+        student.setGrade(studentDTO.getGrade());
+    }
+
+
+    public void deleteStudent(String studentNo) {
+       Student student= getStudentByStudentNo(studentNo);
+        studentRepository.delete(student);
+    }
+
+    public List<Student> getAllByNot(String grade) {
+      return   studentRepository.findAllByNot(grade);
+
+
+    }
+
+    public List<Student> getAllBySort() {
+        List<Student> students=studentRepository.findAllByName();
+        return students;
+    }
 }
